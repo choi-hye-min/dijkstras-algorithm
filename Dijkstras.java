@@ -17,7 +17,9 @@ public class Dijkstras {
 		g.addVertex('F', Arrays.asList(new Vertex('B', 2), new Vertex('C', 6), new Vertex('D', 8), new Vertex('G', 9), new Vertex('H', 3)));
 		g.addVertex('G', Arrays.asList(new Vertex('C', 4), new Vertex('F', 9)));
 		g.addVertex('H', Arrays.asList(new Vertex('E', 1), new Vertex('F', 3)));
-		System.out.println(g.getShortestPath('A', 'H'));
+
+		List<Character> list = g.getShortestPath('A', 'H');
+		System.out.println(list);
 	}
 	
 }
@@ -129,7 +131,7 @@ class Graph {
 		while (!nodes.isEmpty()) {
 			Vertex smallest = nodes.poll();
 			if (smallest.getId() == finish) {
-				final List<Character> path = new ArrayList<Character>();
+				final List<Character> path = new ArrayList<>();
 				while (previous.get(smallest.getId()) != null) {
 					path.add(smallest.getId());
 					smallest = previous.get(smallest.getId());
@@ -140,15 +142,18 @@ class Graph {
 			if (distances.get(smallest.getId()) == Integer.MAX_VALUE) {
 				break;
 			}
-						
+
+			// 현재 위치에서 연결된 노드 탐색
 			for (Vertex neighbor : vertices.get(smallest.getId())) {
+				// 현재 위치 거리 + 연결된 노드 거리
 				Integer alt = distances.get(smallest.getId()) + neighbor.getDistance();
 				if (alt < distances.get(neighbor.getId())) {
-					distances.put(neighbor.getId(), alt);
-					previous.put(neighbor.getId(), smallest);
+					distances.put(neighbor.getId(), alt); // 거리 갱신
+					previous.put(neighbor.getId(), smallest); // 이전노드 저장
 					
 					forloop:
 					for(Vertex n : nodes) {
+						// 거리가 계산된 노드를 큐에 다시 넣어 정렬시킨다.
 						if (n.getId() == neighbor.getId()) {
 							nodes.remove(n);
 							n.setDistance(alt);
@@ -160,7 +165,7 @@ class Graph {
 			}
 		}
 		
-		return new ArrayList<Character>(distances.keySet());
+		return new ArrayList<>(distances.keySet());
 	}
 	
 }
